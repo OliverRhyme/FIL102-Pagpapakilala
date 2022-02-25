@@ -1,4 +1,4 @@
-package dev.rhyme.passionproject
+package dev.rhyme.passionproject.ui
 
 import android.net.Uri
 import android.os.Bundle
@@ -60,6 +60,8 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import dagger.hilt.android.AndroidEntryPoint
+import dev.rhyme.passionproject.R
 import dev.rhyme.passionproject.ui.theme.PagpapakilalaTheme
 import dev.rhyme.passionproject.util.Constants
 import kotlinx.coroutines.launch
@@ -67,6 +69,7 @@ import kotlin.random.Random
 
 private const val PAGE_COUNT = 5
 
+@AndroidEntryPoint
 @ExperimentalPagerApi
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
