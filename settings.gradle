@@ -6,5 +6,5 @@ dependencyResolutionManagement {
         jcenter() // Warning: this repository is going to shut down soon
     }
 }
-rootProject.name = "Passion Project"
+rootProject.name = "Pagpapakilala"
 include ':app'
