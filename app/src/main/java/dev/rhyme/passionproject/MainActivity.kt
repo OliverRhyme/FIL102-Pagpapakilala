@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
             // Remember a SystemUiController
             val systemUiController = rememberSystemUiController()
 
-            val pagerState = rememberPagerState(pageCount = 6)
+            val pagerState = rememberPagerState()
             val bgColor by animateColorAsState(
                 targetValue = when (pagerState.targetPage) {
                     0 -> Color.Cyan
@@ -86,6 +86,7 @@ class MainActivity : ComponentActivity() {
 
                             HorizontalPager(
                                 modifier = Modifier.weight(1f),
+                                count = 6,
                                 state = pagerState
                             ) { page ->
                                 when (page) {
