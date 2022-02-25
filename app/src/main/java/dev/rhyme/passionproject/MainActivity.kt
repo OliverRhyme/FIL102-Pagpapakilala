@@ -264,7 +264,14 @@ fun FourthPage(
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            "Natatandaan ko po noon nong mga sampung taon na nakalipas nong ako pa po ay naka tira sa kalakhang maynila na ang mga daan noon ay may mga puno sa center island. Labis ko itong nagustuhan dahil ito ay nagbibigay ng lilim sa mga motorista at para narin maibsan ang polusyon. Ngayon naman nung nakabalik ako doon nung isang taon ay halos wala na or konte nalanng mga puno. Nag iba narin ang itsura ng mga daan gawa narin ng mga kaliwat kanang construction. Hiling ko sana na kahit tayo ay patungo sa industrialisasyon ay hindi parin sana natin kalimutan ang ating kapaligiran."
+            "Natatandaan ko po noon noong mga sampung taon na nakalipas noong ako pa po ay" +
+                    " naka tira sa kalakhang maynila na ang mga daan noon ay may mga puno sa center" +
+                    " island. Labis ko itong nagustuhan dahil ito ay nagbibigay ng lilim sa mga " +
+                    "motorista at para narin maibsan ang polusyon. Ngayon naman noong nakabalik " +
+                    "ako doon noong isang taon ay halos wala na o kakaunti nalanng mga puno. Nag iba" +
+                    " narin ang itsura ng mga daan gawa narin ng mga kaliwat kanang construction. " +
+                    "Hiling ko sana na kahit tayo ay patungo sa industrialisasyon ay hindi parin " +
+                    "sana natin kalimutan ang ating kapaligiran."
         )
     }
 }
