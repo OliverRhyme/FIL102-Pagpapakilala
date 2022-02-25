@@ -1,4 +1,4 @@
-package dev.rhyme.passionproject.util
+package dev.rhyme.pagpapakilala.util
 
 import androidx.compose.runtime.staticCompositionLocalOf
 import com.google.android.exoplayer2.upstream.cache.SimpleCache

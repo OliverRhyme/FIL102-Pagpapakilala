@@ -1,4 +1,4 @@
-package dev.rhyme.passionproject.ui
+package dev.rhyme.pagpapakilala.ui
 
 import android.net.Uri
 import android.os.Bundle
@@ -26,9 +26,9 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
@@ -61,9 +61,9 @@ import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
-import dev.rhyme.passionproject.R
-import dev.rhyme.passionproject.ui.theme.PagpapakilalaTheme
-import dev.rhyme.passionproject.util.Constants
+import dev.rhyme.pagpapakilala.ui.theme.PagpapakilalaTheme
+import dev.rhyme.pagpapakilala.util.Constants
+import dev.rhyme.pagpapakilala.R
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -317,12 +317,12 @@ fun LastPage(
 
         val context = LocalContext.current
 
-        TextButton(
+        OutlinedButton(
             onClick = {
                 val tabsIntent = CustomTabsIntent.Builder().build()
                 tabsIntent.launchUrl(context, Uri.parse(Constants.SOURCE_CODE_URL))
             },
-            colors = ButtonDefaults.textButtonColors(
+            colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = MaterialTheme.colors.onSurface
             )
         ) {
