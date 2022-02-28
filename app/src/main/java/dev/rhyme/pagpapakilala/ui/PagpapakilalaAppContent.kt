@@ -1,9 +1,7 @@
-package dev.rhyme.passionproject
+package dev.rhyme.pagpapakilala.ui
 
 import android.net.Uri
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+import android.util.Log
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -15,20 +13,24 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
@@ -42,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
@@ -51,7 +54,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
-import androidx.core.view.WindowCompat
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.systemBarsPadding
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -60,96 +62,125 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import dev.rhyme.passionproject.ui.theme.PagpapakilalaTheme
-import dev.rhyme.passionproject.util.Constants
+import dev.rhyme.pagpapakilala.R
+import dev.rhyme.pagpapakilala.ui.component.ExoPlayer
+import dev.rhyme.pagpapakilala.ui.theme.PagpapakilalaTheme
+import dev.rhyme.pagpapakilala.util.Constants
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 private const val PAGE_COUNT = 5
 
+@ExperimentalCoroutinesApi
 @ExperimentalPagerApi
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        setContent {
+@Composable
+fun PagpapakilalaAppContent() {
+    // Remember a SystemUiController
+    val systemUiController = rememberSystemUiController()
 
-            // Remember a SystemUiController
-            val systemUiController = rememberSystemUiController()
-
-            val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState()
 
 
-            val colors: List<Color> = rememberSaveable(
-                PAGE_COUNT,
-                saver = listSaver(
-                    save = { list ->
-                        list.map { it.value.toLong() }
-                    }, restore = { list ->
-                        list.map { Color(it.toULong()) }
-                    }
+    val colors: List<Color> = rememberSaveable(
+        PAGE_COUNT,
+        saver = listSaver(
+            save = { list ->
+                list.map { it.value.toLong() }
+            }, restore = { list ->
+                list.map { Color(it.toULong()) }
+            }
+        )
+    ) {
+        buildList {
+            repeat(PAGE_COUNT) {
+                add(
+                    Color(
+                        red = Random.nextInt(256),
+                        green = Random.nextInt(256),
+                        blue = Random.nextInt(256)
+                    )
                 )
-            ) {
-                buildList {
-                    repeat(PAGE_COUNT) {
-                        add(
-                            Color(
-                                red = Random.nextInt(256),
-                                green = Random.nextInt(256),
-                                blue = Random.nextInt(256)
-                            )
-                        )
-                    }
-                }
+            }
+        }
+    }
+
+    val bgColor by animateColorAsState(
+        targetValue = colors[pagerState.targetPage]
+    )
+    val isDark = isDarkColor(bgColor)
+
+    PagpapakilalaTheme(darkTheme = !isDark) {
+        ProvideWindowInsets {
+            val isLight = MaterialTheme.colors.isLight
+            SideEffect {
+                systemUiController.setSystemBarsColor(
+                    color = Color.Transparent,
+                    darkIcons = isLight,
+                    isNavigationBarContrastEnforced = false
+                )
             }
 
-            val bgColor by animateColorAsState(
-                targetValue = colors[pagerState.targetPage]
-            )
-            val isDark = isDarkColor(bgColor)
+            Scaffold(
+                backgroundColor = bgColor,
+                contentColor = MaterialTheme.colors.onSurface
+            ) {
 
-            PagpapakilalaTheme(darkTheme = !isDark) {
-                ProvideWindowInsets {
-                    val isLight = MaterialTheme.colors.isLight
-                    SideEffect {
-                        systemUiController.setSystemBarsColor(
-                            color = Color.Transparent,
-                            darkIcons = isLight,
-                            isNavigationBarContrastEnforced = false
-                        )
-                    }
+                Column(
+                    modifier = Modifier
+                        .systemBarsPadding()
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
 
-                    Scaffold(
-                        backgroundColor = bgColor,
-                        contentColor = MaterialTheme.colors.onSurface
-                    ) {
+                    val animationScope = rememberCoroutineScope()
+                    ExoPlayer(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .aspectRatio(16f / 9f)
+                            .clip(RoundedCornerShape(4.dp))
+                            .shadow(elevation = 8.dp),
+                        playImmediately = true,
+                        url = Constants.VIDEO_URL,
+                        onError = {
+                            throw it
+                        },
+                        onTimeChanged = { current, total ->
 
-                        Column(
-                            modifier = Modifier
-                                .systemBarsPadding()
-                                .fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                        ) {
-
-                            HorizontalPager(
-                                modifier = Modifier.weight(1f),
-                                count = PAGE_COUNT,
-                                state = pagerState
-                            ) { page ->
-                                when (page) {
-                                    0 -> CoverPage(modifier = Modifier.fillMaxSize())
-                                    1 -> SecondPage(modifier = Modifier.fillMaxSize())
-                                    2 -> ThirdPage(modifier = Modifier.fillMaxSize())
-                                    3 -> FourthPage(modifier = Modifier.fillMaxSize())
-                                    4 -> LastPage(modifier = Modifier.fillMaxSize())
-                                    else -> Box(Modifier.fillMaxSize())
-                                }
+                            val target = when (current) {
+                                in 0..5000 -> 0
+                                in 5001..17000 -> 1
+                                in 17001..35000 -> 2
+                                in 35001..79000 -> 3
+                                in 79001..total -> 4
+                                else -> 0
                             }
-                            BottomNav(pagerState = pagerState)
-                        }
 
+                            Log.d("TEST", "target: $target")
+                            if (target != pagerState.currentPage) {
+                                Log.d("TEST", "moving")
+                                pagerState.animateScrollToPage(target)
+                            }
+                        }
+                    )
+
+                    HorizontalPager(
+                        modifier = Modifier.weight(1f),
+                        count = PAGE_COUNT,
+                        state = pagerState
+                    ) { page ->
+                        when (page) {
+                            0 -> CoverPage(modifier = Modifier.fillMaxSize())
+                            1 -> SecondPage(modifier = Modifier.fillMaxSize())
+                            2 -> ThirdPage(modifier = Modifier.fillMaxSize())
+                            3 -> FourthPage(modifier = Modifier.fillMaxSize())
+                            4 -> LastPage(modifier = Modifier.fillMaxSize())
+                            else -> Box(Modifier.fillMaxSize())
+                        }
                     }
+                    BottomNav(pagerState = pagerState)
                 }
+
             }
         }
     }
@@ -169,7 +200,8 @@ fun Page(
 ) {
     Column(
         modifier = modifier
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(state = rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         content = content,
@@ -314,13 +346,13 @@ fun LastPage(
 
         val context = LocalContext.current
 
-        TextButton(
+        OutlinedButton(
             onClick = {
                 val tabsIntent = CustomTabsIntent.Builder().build()
                 tabsIntent.launchUrl(context, Uri.parse(Constants.SOURCE_CODE_URL))
             },
-            colors = ButtonDefaults.textButtonColors(
-                contentColor = MaterialTheme.colors.onSurface
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = MaterialTheme.colors.onSurface,
             )
         ) {
             Text("Tignan ang source code")
